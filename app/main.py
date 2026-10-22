@@ -1,4 +1,6 @@
 
+from app.schemas import GuardRequest, GuardResponse
+import uuid
 from fastapi import FastAPI
 
 app = FastAPI(
@@ -23,3 +25,13 @@ def health_check():
     return {
         "status": "healthy",
     }
+
+
+@app.post("/v1/guard", response_model=GuardResponse)
+
+def guard_prompt(request: GuardRequest):
+    return GuardResponse(
+        request_id=str(uuid.uuid4()),
+        verdict="SAFE",
+        message="Prompt received successfully. Detection is not implemented yet.",
+    )
