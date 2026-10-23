@@ -1,3 +1,5 @@
+import threading
+import webbrowser
 
 from app.schemas import GuardRequest, GuardResponse
 import uuid
@@ -35,3 +37,11 @@ def guard_prompt(request: GuardRequest):
         verdict="SAFE",
         message="Prompt received successfully. Detection is not implemented yet.",
     )
+
+if __name__ == "__main__":
+    threading.Timer(
+        2,
+        lambda: webbrowser.open("http://127.0.0.1:8000/docs")
+    ).start()
+
+     
