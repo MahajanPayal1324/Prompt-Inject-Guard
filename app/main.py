@@ -2,6 +2,7 @@ import threading
 import webbrowser
 
 from app.schemas import GuardRequest, GuardResponse
+from app.detection.heuristics import detect_suspicious_patterns
 import uuid
 from fastapi import FastAPI
 
@@ -30,12 +31,17 @@ def health_check():
 
 
 @app.post("/v1/guard", response_model=GuardResponse)
-
 def guard_prompt(request: GuardRequest):
+    result = detect_suspicious_patterns(request.prompt)
+
     return GuardResponse(
         request_id=str(uuid.uuid4()),
-        verdict="SAFE",
-        message="Prompt received successfully. Detection is not implemented yet.",
+        verdict=result["verdict"],
+        message=(
+            f"Suspicious patterns detected: {', '.join(result['matched_rules'])}"
+            if result["matched_rules"]
+            else "No known suspicious patterns detected."
+        ),
     )
 
 if __name__ == "__main__":
